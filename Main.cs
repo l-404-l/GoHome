@@ -21,8 +21,6 @@ namespace GoHome
     {
         public override void VRChat_OnUiManagerInit()
         {
-            var savelist = new List<string>();
-            
             var buttont = QuickMenu.prop_QuickMenu_0.transform.Find("ShortcutMenu/GoHomeButton");
             var button = buttont.GetComponentInChildren<UnityEngine.UI.Button>();
             var deflt = button.onClick;
