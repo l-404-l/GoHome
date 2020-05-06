@@ -11,7 +11,7 @@ namespace GoHome
 {
     public static class BuildInfo
     {
-        public const string Name = "Clean Console"; // Name of the Mod.  (MUST BE SET)
+        public const string Name = "Fast Go Home"; // Name of the Mod.  (MUST BE SET)
         public const string Author = "404#0004"; // Author of the Mod.  (Set as null if none)
         public const string Company = "I am not a company -Kappa-"; // Company that made the Mod.  (Set as null if none)
         public const string Version = "1.0.0"; // Version of the Mod.  (MUST BE SET)
