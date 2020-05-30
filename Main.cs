@@ -1,5 +1,7 @@
 ﻿using MelonLoader;
 using System;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using VRC.Core;
 
@@ -7,14 +9,15 @@ namespace GoHome
 {
     public static class BuildInfo
     {
-        public const string Name = "Fast Go Home"; // Name of the Mod.  (MUST BE SET)
+        public const string Name = "Go Home"; // Name of the Mod.  (MUST BE SET)
         public const string Author = "404#0004"; // Author of the Mod.  (Set as null if none)
         public const string Company = "I am not a company -Kappa-"; // Company that made the Mod.  (Set as null if none)
-        public const string Version = "1.1.0"; // Version of the Mod.  (MUST BE SET)
+        public const string Version = "1.5.0"; // Version of the Mod.  (MUST BE SET)
         public const string DownloadLink = "https://github.com/l-404-l"; // Download Link for the Mod.  (Set as null if none)
     }
     public class Main : MelonMod
     {
+        public static MethodInfo SetWorldM = typeof(VRCFlowManager).GetMethods().First(x => x.GetParameters().Length == 1 && x.GetParameters()[0].ParameterType.Name.ToLower().Contains("objectpublic"));
         public static bool IsWorld(string id) // Made for other mods
         {
             return VRCFlowManager.field_Private_Static_VRCFlowManager_0.Method_Public_Boolean_String_Boolean_0(id, true);
@@ -25,7 +28,7 @@ namespace GoHome
             var w = RoomManagerBase.field_Internal_Static_ApiWorld_0;
             return (wi != null && w != null);
         }
-        public static bool IsHome()
+        public static bool IsHome() // Made for other mods to use
         {
             string homew;
             if (APIUser.CurrentUser != null && !string.IsNullOrEmpty(APIUser.CurrentUser.homeLocation))
@@ -35,9 +38,10 @@ namespace GoHome
             else homew = RemoteConfig.GetString("homeWorldId");
             return IsWorld(homew);
         }
-        public static void GoHome() // Had to remake this because VRChats code SUCKKSSSSSSSSSSS
+        public static void GoHome() // Had to remake this because VRChats code SUCKKSSSSSSSSSSS also for other mods
         {
             string homew;
+            var wi = RoomManagerBase.field_Internal_Static_ApiWorldInstance_0;
             if (!string.IsNullOrEmpty(APIUser.CurrentUser.homeLocation))
             {
                 homew = APIUser.CurrentUser.homeLocation;
@@ -46,8 +50,10 @@ namespace GoHome
 
             if (!InLobby())
                 return;
+            if (IsHome() && (wi.InstanceType == ApiWorldInstance.AccessType.InviteOnly | wi.InstanceType == ApiWorldInstance.AccessType.InvitePlus))
+                return;
 
-            VRCFlowManager.field_Private_Static_VRCFlowManager_0.Method_Public_Void_ObjectPublicObDiVoDiPoVoStDiObDiUnique_0(new ObjectPublicObDiVoDiPoVoStDiObDiUnique(ObjectPublicObDiVoDiPoVoStDiObDiUnique.EnumNPublicSealedvaNoDeMePoMoSD7vUnique.Menu, "QuickMenu_GoHome"));
+            SetWorldM.Invoke(VRCFlowManager.field_Private_Static_VRCFlowManager_0, new object[] { null });
             VRCFlowManager.field_Private_Static_VRCFlowManager_0.prop_String_0 = homew;
             VRCFlowManager.field_Private_Static_VRCFlowManager_0.field_Protected_AccessType_0 = ApiWorldInstance.AccessType.InviteOnly;
         }
